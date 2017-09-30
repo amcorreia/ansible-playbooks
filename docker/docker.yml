@@ -1,0 +1,30 @@
+
+---
+- hosts: all
+
+  tasks:
+
+      - name: Install dependencies
+        apt:
+            name: apt-transport-https
+            state: latest
+            update_cache: yes
+
+      - name: Add apt siging key for Docker
+        apt_key:
+            # url: http://download.docker.com/linux/debian/gpg
+            id: 0EBFCD88
+            keyserver: ha.pool.sks-keyservers.net
+            state: present
+
+      - name: Add docker.list
+        apt_repository:
+          repo: deb https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable
+          state: present
+          update_cache: yes
+          filename: 'docker'
+
+      - name: Install Docker
+        apt:
+            name: docker-ce
+            state: latest
